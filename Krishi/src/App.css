@@ -1,0 +1,12 @@
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.app-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
