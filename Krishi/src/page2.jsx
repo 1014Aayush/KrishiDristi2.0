@@ -3,40 +3,35 @@ import "./Page2.css";
 import Slider from "react-slick"; // React Slick carousel for service slider
 import "slick-carousel/slick/slick.css"; // Carousel style imports
 import "slick-carousel/slick/slick-theme.css"; // Carousel theme style imports
-import a from "./assets/images/a.png";
+import plant from "./assets/images/plant.png";
 import aayush from "./assets/images/aayush.jpg";
 
 const services = [
   {
-    title: "Web Development",
-    image: a, // Use imported image directly
-    description: "Build modern and responsive websites.",
+    title: "Crop Recommendation",
+    image: plant, // Use imported image directly
+    description: "Recommending the best crop based on real-time soil and environmental data from IoT sensors.",
   },
   {
-    title: "Graphic Design",
-    image: aayush,
-    description: "Creative design solutions for branding.",
+    title: "Yield Prediction",
+    image: plant,
+    description: "Predicting crop yield based on real-time data from soil and environmental sensors.",
   },
   {
-    title: "SEO Optimization",
-    image: aayush,
-    description: "Improve visibility and search ranking.",
+    title: "Temperature and Humidity Level",
+    image: plant,
+    description: "Monitor temperature and humidity levels in real-time using IoT sensors.",
   },
   {
-    title: "App Development",
-    image: aayush,
-    description: "Custom mobile and desktop applications.",
+    title: "Soil Data Vizualization",
+    image: plant,
+    description: "Visualizing soil data in real-time for better understanding and informed decision-making.",
   },
   {
-    title: "Digital Marketing",
-    image: aayush,
-    description: "Grow your audience through targeted campaigns.",
-  },
-  {
-    title: "Content Writing",
-    image: aayush,
-    description: "Engaging content to capture your audience.",
-  },
+    title: "User-Friendly Interface",
+    image: plant,
+    description: "Providing a user-friendly interface for easy access to real-time agricultural data and insights.",
+  }
 ];
 
 function Page2() {
@@ -62,9 +57,9 @@ function Page2() {
 
   return (
     <>
-      <div className="page2-section">
+      <div  className="page2-section">
         <div className="container">
-          <div className="section-header">
+          <div id="Page2" className="section-header">
             <p className="section-title">Our Services</p>
           </div>
 
