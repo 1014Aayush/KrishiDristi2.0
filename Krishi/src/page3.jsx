@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Page3.css";
 import {
   LineChart,
@@ -105,17 +105,40 @@ function Page3() {
     return "status-green";
   };
   // Initial mock sensor data
-  const [sensorData, setSensorData] = useState([
-    { timestamp: "2024-01-09 10:00:00", value: 24.5 },
-    { timestamp: "2024-01-09 10:01:00", value: 25.2 },
-    { timestamp: "2024-01-09 10:02:00", value: 25.8 },
-    { timestamp: "2024-01-09 10:03:00", value: 24.9 },
-    { timestamp: "2024-01-09 10:04:00", value: 24.3 },
-  ]);
+  const [sensorData, setSensorData] = useState([]);
+
+//   
+  // Fetch data from Firebase
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://krishi-drishti-default-rtdb.firebaseio.com/sensors.json"
+        );
+        const data = await response.json();
+
+        if (data) {
+          const formattedData = Object.values(data).map((item) => ({
+            timestamp: item.timestamp || "Unknown",
+            value: item.temperature || 0, // Use temperature as the main value
+          }));
+
+          setSensorData(formattedData);
+        } else {
+          console.error("No data available in Firebase.");
+        }
+      } catch (error) {
+        console.error("Error fetching data from Firebase:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Helper function to format timestamps
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString();
+    const date = new Date(timestamp);
+    return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleTimeString();
   };
 
   // Team members data
@@ -501,3 +524,4 @@ function Page3() {
 }
 
 export default Page3;
+

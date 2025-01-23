@@ -1,10 +1,13 @@
+
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navbar from "./Navbar"
 import Page1 from "./page1";
 import Page2 from "./page2";
 import Page3 from "./page3";
 import "./App.css";
+import "./firebase-config.js";
+
 
 function App() {
   return (
