@@ -611,3 +611,81 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.temperature-graph-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+
+  border-radius: 12px;
+}
+
+.graph-title {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.graph-card {
+
+  border-radius: 12px;
+  padding: 20px;
+
+}
+
+.graph-wrapper {
+  width: 100%;
+  height: 300px;
+}
+
+.line-chart {
+  background-color: transparent;
+}
+
+.grid-line {
+  stroke: #ffffff;
+}
+
+.x-axis, .y-axis {
+  color: #ffffff;
+}
+
+.custom-tooltip {
+  background-color: #15803d !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  padding: 10px !important;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  background-color: #15803d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-button:hover:not(.disabled) {
+  background-color: #15803d;
+}
+
+.pagination-button.disabled {
+  background-color: #15803d;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.page-indicator {
+  color: #ffffff;
+  font-weight: bold;
+}

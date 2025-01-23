@@ -106,8 +106,27 @@ function Page3() {
   };
   // Initial mock sensor data
   const [sensorData, setSensorData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 5;
 
-//   
+  const paginatedData = sensorData.slice(
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
+  );
+
+  const handleNextPage = () => {
+    if ((currentPage + 1) * pageSize < sensorData.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  //
   // Fetch data from Firebase
   useEffect(() => {
     const fetchData = async () => {
@@ -118,12 +137,16 @@ function Page3() {
         const data = await response.json();
 
         if (data) {
-          const formattedData = Object.values(data).map((item) => ({
-            timestamp: item.timestamp || "Unknown",
-            value: item.temperature || 0, // Use temperature as the main value
-          }));
+          const formattedData = Object.values(data)
+            .map((item) => ({
+              timestamp: item.timestamp || "Unknown",
+              valueT: item.temperature || 0, // Use temperature as the main value
+              valueH: item.humidity || 0, // Use temperature as the main value
+              
 
+            })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           setSensorData(formattedData);
+          
         } else {
           console.error("No data available in Firebase.");
         }
@@ -139,6 +162,13 @@ function Page3() {
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);
     return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleTimeString();
+  };
+
+  const formatDateTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return isNaN(date.getTime())
+      ? "Invalid Date"
+      : `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
 
   // Team members data
@@ -210,88 +240,173 @@ function Page3() {
 
         {/* Sensor Data Graph */}
         <h1 className="p3-title1">Humidity Level</h1>
-        <div className="p3-card">
-          <div className="graph-container">
-            <ResponsiveContainer
-              width="100%"
-              height={300}
-              style={{ backgroundColor: "transparent" }}
-            >
-              <LineChart
-                data={sensorData}
-                style={{ backgroundColor: "transparent", color: "white" }}
+        <div className="temperature-graph-container">
+          <div className="graph-card">
+            <div className="graph-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={paginatedData} className="line-chart">
+                  <CartesianGrid strokeDasharray="3 3" className="grid-line" />
+                  <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={formatTime}
+                    label={{
+                      position: "insideBottom",
+                      offset: -5,
+                    }}
+                    className="x-axis"
+                    stroke="white"
+                    tick={{ fill: "white", dy: 10 }} 
+                  />
+                  <YAxis
+                    label={{
+                      value: "Humidity ",
+                      angle: -90,
+                      position: "insideLeft",
+                      fill: "white",
+                    }}
+                    className="y-axis"
+                    stroke="white"
+                    tick={{ fill: "white", dx: -10 }} />
+                  <Tooltip
+                    labelFormatter={formatDateTime}
+                    formatter={(valueH) => [`${valueH}`, "Humidity"]}
+                    className="custom-tooltip"
+                    contentStyle={{
+                      backgroundColor: "#333333",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "8px",
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="valueH"
+                    stroke="#ffffff"
+                    strokeWidth={4}
+                    dot={{ r: 3, fill: "#1e4230" }}
+                    name="Time"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="pagination-controls">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 0}
+                className={`pagination-button ${
+                  currentPage === 0 ? "disabled" : ""
+                }`}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="white" />
-                <XAxis
-                  dataKey="timestamp"
-                  tickFormatter={formatTime}
-                  stroke="white"
-                />
-                <YAxis stroke="white" />
-                <Tooltip
-                  labelFormatter={formatTime}
-                  formatter={(value) => [`${value}`, "Sensor Value"]}
-                  contentStyle={{
-                    backgroundColor: "#333333",
-                    color: "#ffffff",
-                    border: "none",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#ffffff"
-                  strokeWidth={4}
-                  dot={{ fill: "#000000" }}
-                  name="Sensor Reading"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+                &#8592; Previous
+              </button>
+
+              <span className="page-indicator">
+                Page {currentPage + 1} of{" "}
+                {Math.ceil(sensorData.length / pageSize)}
+              </span>
+
+              <button
+                onClick={handleNextPage}
+                disabled={(currentPage + 1) * pageSize >= sensorData.length}
+                className={`pagination-button ${
+                  (currentPage + 1) * pageSize >= sensorData.length
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                Next &#8594;
+              </button>
+            </div>
           </div>
         </div>
 
-        <h1 className="p3-title1">Temperature(°C)</h1>
-        <div className="p3-card">
-          <div className="graph-container">
-            <ResponsiveContainer
-              width="100%"
-              height={300}
-              style={{ backgroundColor: "transparent" }}
-            >
-              <LineChart
-                data={sensorData}
-                style={{ backgroundColor: "transparent", color: "white" }}
+        <h1 className="p3-title1">Temperature Level</h1>
+        <div className="temperature-graph-container">
+          <div className="graph-card">
+            <div className="graph-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={paginatedData} className="line-chart">
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    className="grid-line"
+                    stroke="white"
+                  />
+                  <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={formatTime}
+                    label={{
+                      position: "insideBottom",
+                      offset: 5,
+                    }}
+                    className="x-axis"
+                    stroke="white" // Sets the X-axis line color to whit
+                    tick={{ fill: "white", dy: 10 }} 
+                  />
+                  <YAxis
+                    label={{
+                      value: "Temperature (°C)",
+                      angle: -90,
+                      position: "insideLeft",
+                      fill: "white",
+                    }}
+                    className="y-axis"
+                    stroke="white"
+                    tick={{ fill: "white", dx: -10 }} 
+                  />
+                  <Tooltip
+                    labelFormatter={formatDateTime}
+                    formatter={(valueT) => [`${valueT}°C`, "Temperature"]}
+                    className="custom-tooltip"
+                    contentStyle={{
+                      backgroundColor: "#333333",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "8px",
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="valueT"
+                    stroke="#ffffff"
+                    strokeWidth={4}
+                    dot={{ r: 3, fill: "#1e4230" }}
+                    name="Time"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="pagination-controls">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 0}
+                className={`pagination-button ${
+                  currentPage === 0 ? "disabled" : ""
+                }`}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="white" />
-                <XAxis
-                  dataKey="timestamp"
-                  tickFormatter={formatTime}
-                  stroke="white"
-                />
-                <YAxis stroke="white" />
-                <Tooltip
-                  labelFormatter={formatTime}
-                  formatter={(value) => [`${value}`, "Sensor Value"]}
-                  contentStyle={{
-                    backgroundColor: "#333333",
-                    color: "#ffffff",
-                    border: "none",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#ffffff"
-                  strokeWidth={4}
-                  dot={{ fill: "#000000" }}
-                  name="Sensor Reading"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+                &#8592; Previous
+              </button>
+
+              <span className="page-indicator">
+                Page {currentPage + 1} of{" "}
+                {Math.ceil(sensorData.length / pageSize)}
+              </span>
+
+              <button
+                onClick={handleNextPage}
+                disabled={(currentPage + 1) * pageSize >= sensorData.length}
+                className={`pagination-button ${
+                  (currentPage + 1) * pageSize >= sensorData.length
+                    ? "disabled"
+                    : ""
+                }`}
+              >
+                Next &#8594;
+              </button>
+            </div>
           </div>
         </div>
         <div className="dashboard-container">
@@ -362,23 +477,22 @@ function Page3() {
               </div>
             </div>
 
-              {/* Button */}
-              <button
-                className={`CR-button ${isLoading ? "disabled" : ""}`}
-                onClick={handleButtonPress}
-                disabled={isLoading}
-              >
-                {isLoading ? "Fetching..." : "Get Recommendation"}
-              </button>
+            {/* Button */}
+            <button
+              className={`CR-button ${isLoading ? "disabled" : ""}`}
+              onClick={handleButtonPress}
+              disabled={isLoading}
+            >
+              {isLoading ? "Fetching..." : "Get Recommendation"}
+            </button>
 
-              {/* Loading Spinner */}
-              {isLoading && <div className="loader"></div>}
+            {/* Loading Spinner */}
+            {isLoading && <div className="loader"></div>}
 
-              {/* Crop Recommendation */}
-              {cropRecommend && (
-                <p className="CR-recommendation">{cropRecommend}</p>
-              )}
-
+            {/* Crop Recommendation */}
+            {cropRecommend && (
+              <p className="CR-recommendation">{cropRecommend}</p>
+            )}
           </div>
         </div>
         <h1 className="p3-title1">Yield Prediction</h1>
@@ -524,4 +638,3 @@ function Page3() {
 }
 
 export default Page3;
-
