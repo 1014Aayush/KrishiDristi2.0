@@ -1,5 +1,6 @@
-// import React from "react";
-// import { Routes, Route, Link } from "react-router-dom";
+
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
 import Navbar from "./Navbar"
 import Page1 from "./page1";
 import Page2 from "./page2";
@@ -21,7 +22,7 @@ function App() {
       <Routes>
         <Route path="/page3" element={<Page3 />} />
       </Routes>*/}
-      <Navbar/>
+      <Navbar />
       <Page1 />
       <Page2 />
       <Page3 />
