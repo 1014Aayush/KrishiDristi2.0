@@ -14,6 +14,24 @@ import { Card, CardHeader, CardContent } from "@mui/material";
 import plant from "./assets/images/plant.png";
 
 function Page3() {
+  const [cropRecommend, setCropRecommend] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleButtonPress = () => {
+    setIsLoading(true);
+    setCropRecommend(null);
+
+    setTimeout(() => {
+      const computedRecommendation = getCropRecommendation();
+      setCropRecommend(computedRecommendation);
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  const getCropRecommendation = () => {
+    return "🌾 Recommended Crop: Wheat! 🌱 It's perfect for this season.";
+  };
+
   const recommendedCrop = {
     name: "Rice",
     season: "Kharif",
@@ -165,147 +183,179 @@ function Page3() {
             ))}
           </div>
         </div>
+        <div className="space"></div>
 
         {/* Sensor Data Graph */}
         <h1 className="p3-title1">Humidity Level</h1>
-        <Card className="p3-card" style={{ backgroundColor: "transparent"}}>
-          <CardContent 
-          style={{ backgroundColor: "transparent" }}>
-            <div className="graph-container">
-              <ResponsiveContainer width="100%" height={300} style={{ backgroundColor: "transparent" }}>
-                <LineChart
-                  data={sensorData}
-                  style={{ backgroundColor: "transparent", color: "white" }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="timestamp" tickFormatter={formatTime} />
-                  <YAxis />
-                  <Tooltip
-                    labelFormatter={formatTime}
-                    formatter={(value) => [`${value}`, "Sensor Value"]}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#2563eb"
-                    strokeWidth={4}
-                    dot={{ fill: "#2563eb" }}
-                    name="Sensor Reading"
-                    color="white"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-
-        <h1 className="p3-title1">Temperature(°C)</h1>
-        <Card className="p3-card">
-          <CardContent>
-            <div className="graph-container">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart
-                  data={sensorData}
-                  
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="timestamp" tickFormatter={formatTime} />
-                  <YAxis />
-                  <Tooltip
-                    labelFormatter={formatTime}
-                    formatter={(value) => [`${value}`, "Sensor Value"]}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#2563eb"
-                    strokeWidth={2}
-                    dot={{ fill: "#2563eb" }}
-                    name="Sensor Reading"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-        <div className="dashboard-container">
-          <h1 className="p3-title1">Soil Analysis Dashboard</h1>
-
-          <div className="soil-cards-grid">
-            {/* NPK Card */}
-            <div className="soil-card">
-              <div className="soil-card-header">
-                <h3 className="soil-card-title">NPK Levels</h3>
-              </div>
-              <div className="soil-card-content">
-                <div className="npk-list">
-                  <div className="npk-item">
-                    <span>Nitrogen (N)</span>
-                    <span className={getNPKColor(soilData.nitrogen)}>
-                      {soilData.nitrogen}%
-                    </span>
-                  </div>
-                  <div className="npk-item">
-                    <span>Phosphorus (P)</span>
-                    <span className={getNPKColor(soilData.phosphorus)}>
-                      {soilData.phosphorus}%
-                    </span>
-                  </div>
-                  <div className="npk-item">
-                    <span>Potassium (K)</span>
-                    <span className={getNPKColor(soilData.potassium)}>
-                      {soilData.potassium}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Moisture Card */}
-            <div className="soil-card">
-              <div className="soil-card-header">
-                <h3 className="soil-card-title">Soil Moisture</h3>
-              </div>
-              <div className="soil-card-content">
-                <div className="value-display">
-                  <span
-                    className={`large-value ${getMoistureColor(
-                      soilData.moisture
-                    )}`}
-                  >
-                    {soilData.moisture}%
-                  </span>
-                  <span className="value-label">Relative Humidity</span>
-                </div>
-              </div>
-            </div>
-
-            {/* pH Card */}
-            <div className="soil-card">
-              <div className="soil-card-header">
-                <h3 className="soil-card-title">pH Level</h3>
-              </div>
-              <div className="soil-card-content">
-                <div className="value-display">
-                  <span className={`large-value ${getPHColor(soilData.pH)}`}>
-                    {soilData.pH}
-                  </span>
-                  <span className="value-label">pH Scale</span>
-                </div>
-              </div>
-            </div>
+        <div className="p3-card">
+          <div className="graph-container">
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              style={{ backgroundColor: "transparent" }}
+            >
+              <LineChart
+                data={sensorData}
+                style={{ backgroundColor: "transparent", color: "white" }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="white" />
+                <XAxis
+                  dataKey="timestamp"
+                  tickFormatter={formatTime}
+                  stroke="white"
+                />
+                <YAxis stroke="white" />
+                <Tooltip
+                  labelFormatter={formatTime}
+                  formatter={(value) => [`${value}`, "Sensor Value"]}
+                  contentStyle={{
+                    backgroundColor: "#333333",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#ffffff"
+                  strokeWidth={4}
+                  dot={{ fill: "#000000" }}
+                  name="Sensor Reading"
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
-        <div className="CRP">
-          <h1 className="p3-title1">Recommended Crop</h1>
-          <div className="CRP-grid-container">
-            <div className="CRP-grid-item">
-              <p className="CRP-label">Crop Name:</p>
-              <p className="CRP-label">{recommendedCrop.name}</p>
+
+        <h1 className="p3-title1">Temperature(°C)</h1>
+        <div className="p3-card">
+          <div className="graph-container">
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              style={{ backgroundColor: "transparent" }}
+            >
+              <LineChart
+                data={sensorData}
+                style={{ backgroundColor: "transparent", color: "white" }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="white" />
+                <XAxis
+                  dataKey="timestamp"
+                  tickFormatter={formatTime}
+                  stroke="white"
+                />
+                <YAxis stroke="white" />
+                <Tooltip
+                  labelFormatter={formatTime}
+                  formatter={(value) => [`${value}`, "Sensor Value"]}
+                  contentStyle={{
+                    backgroundColor: "#333333",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#ffffff"
+                  strokeWidth={4}
+                  dot={{ fill: "#000000" }}
+                  name="Sensor Reading"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="dashboard-container">
+          <h1 className="p3-title1">Soil Analysis Dashboard</h1>
+          <div className="CR-card">
+            <div className="soil-cards-grid">
+              {/* NPK Card */}
+              <div className="soil-card">
+                <div className="soil-card-header">
+                  <h3 className="soil-card-title">NPK Levels</h3>
+                </div>
+                <div className="soil-card-content">
+                  <div className="npk-list">
+                    <div className="npk-item">
+                      <span>Nitrogen (N)</span>
+                      <span className={getNPKColor(soilData.nitrogen)}>
+                        {soilData.nitrogen}%
+                      </span>
+                    </div>
+                    <div className="npk-item">
+                      <span>Phosphorus (P)</span>
+                      <span className={getNPKColor(soilData.phosphorus)}>
+                        {soilData.phosphorus}%
+                      </span>
+                    </div>
+                    <div className="npk-item">
+                      <span>Potassium (K)</span>
+                      <span className={getNPKColor(soilData.potassium)}>
+                        {soilData.potassium}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Moisture Card */}
+              <div className="soil-card">
+                <div className="soil-card-header">
+                  <h3 className="soil-card-title">Soil Moisture</h3>
+                </div>
+                <div className="soil-card-content">
+                  <div className="value-display">
+                    <span
+                      className={`large-value ${getMoistureColor(
+                        soilData.moisture
+                      )}`}
+                    >
+                      {soilData.moisture}%
+                    </span>
+                    <span className="value-label">Relative Humidity</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* pH Card */}
+              <div className="soil-card">
+                <div className="soil-card-header">
+                  <h3 className="soil-card-title">pH Level</h3>
+                </div>
+                <div className="soil-card-content">
+                  <div className="value-display">
+                    <span className={`large-value ${getPHColor(soilData.pH)}`}>
+                      {soilData.pH}
+                    </span>
+                    <span className="value-label">pH Scale</span>
+                  </div>
+                </div>
+              </div>
             </div>
+
+              {/* Button */}
+              <button
+                className={`CR-button ${isLoading ? "disabled" : ""}`}
+                onClick={handleButtonPress}
+                disabled={isLoading}
+              >
+                {isLoading ? "Fetching..." : "Get Recommendation"}
+              </button>
+
+              {/* Loading Spinner */}
+              {isLoading && <div className="loader"></div>}
+
+              {/* Crop Recommendation */}
+              {cropRecommend && (
+                <p className="CR-recommendation">{cropRecommend}</p>
+              )}
+
           </div>
         </div>
         <h1 className="p3-title1">Yield Prediction</h1>
@@ -321,7 +371,6 @@ function Page3() {
 
               <form onSubmit={handleSubmit} className="cropR-form">
                 <div className="cropR-input-grid">
-
                   <div className="cropR-input-group">
                     <label htmlFor="potassium" className="cropR-label">
                       Crop
@@ -443,15 +492,6 @@ function Page3() {
                   </div>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-        <div className="CRP-card CRP-yield-card">
-          <h2 className="p3-title1">Yield Production Details</h2>
-          <div className="CRP-grid-container">
-            <div className="CRP-grid-item">
-              <p className="CRP-label">Expected Yield:</p>
-              <p className="CRP-label">{yieldData.expectedYield}</p>
             </div>
           </div>
         </div>
