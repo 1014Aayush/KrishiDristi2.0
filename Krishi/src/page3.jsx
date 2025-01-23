@@ -79,31 +79,7 @@ function Page3() {
       setLoading(false);
     }, 1500);
   };
-  const soilData = {
-    nitrogen: 45,
-    phosphorus: 32,
-    potassium: 28,
-    moisture: 65,
-    pH: 6.8,
-  };
 
-  const getNPKColor = (value) => {
-    if (value < 30) return "status-red";
-    if (value < 50) return "status-yellow";
-    return "status-green";
-  };
-
-  const getMoistureColor = (value) => {
-    if (value < 40) return "status-red";
-    if (value < 70) return "status-green";
-    return "status-blue";
-  };
-
-  const getPHColor = (value) => {
-    if (value < 6.0 || value > 7.5) return "status-red";
-    if (value < 6.5 || value > 7.0) return "status-yellow";
-    return "status-green";
-  };
   // Initial mock sensor data
   const [sensorData, setSensorData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -142,11 +118,21 @@ function Page3() {
               timestamp: item.timestamp || "Unknown",
               valueT: item.temperature || 0, // Use temperature as the main value
               valueH: item.humidity || 0, // Use temperature as the main value
-              
-
-            })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            }))
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           setSensorData(formattedData);
-          
+
+          const latestSoilData = Object.values(data).sort(
+            (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          )[0];
+
+          setSoilData({
+            nitrogen: latestSoilData.nitrogen || 0,
+            phosphorus: latestSoilData.phosphorus || 0,
+            potassium: latestSoilData.potassium || 0,
+            soil_moisture: latestSoilData.soil_moisture || 0,
+            ph: latestSoilData.ph || 0,
+          });
         } else {
           console.error("No data available in Firebase.");
         }
@@ -171,6 +157,31 @@ function Page3() {
       : `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
 
+  const [soilData, setSoilData] = useState({
+    nitrogen: 0,
+    phosphorus: 0,
+    potassium: 0,
+    moisture: 0,
+    pH: 0,
+  });
+
+  const getNPKColor = (value) => {
+    if (value < 30) return "status-red";
+    if (value < 50) return "status-yellow";
+    return "status-green";
+  };
+
+  const getMoistureColor = (value) => {
+    if (value < 40) return "status-red";
+    if (value < 70) return "status-green";
+    return "status-blue";
+  };
+
+  const getPHColor = (value) => {
+    if (value < 6.0 || value > 7.5) return "status-red";
+    if (value < 6.5 || value > 7.0) return "status-yellow";
+    return "status-green";
+  };
   // Team members data
   const teamMembersLeft = [
     {
@@ -255,7 +266,7 @@ function Page3() {
                     }}
                     className="x-axis"
                     stroke="white"
-                    tick={{ fill: "white", dy: 10 }} 
+                    tick={{ fill: "white", dy: 10 }}
                   />
                   <YAxis
                     label={{
@@ -266,7 +277,8 @@ function Page3() {
                     }}
                     className="y-axis"
                     stroke="white"
-                    tick={{ fill: "white", dx: -10 }} />
+                    tick={{ fill: "white", dx: -10 }}
+                  />
                   <Tooltip
                     labelFormatter={formatDateTime}
                     formatter={(valueH) => [`${valueH}`, "Humidity"]}
@@ -342,7 +354,7 @@ function Page3() {
                     }}
                     className="x-axis"
                     stroke="white" // Sets the X-axis line color to whit
-                    tick={{ fill: "white", dy: 10 }} 
+                    tick={{ fill: "white", dy: 10 }}
                   />
                   <YAxis
                     label={{
@@ -353,7 +365,7 @@ function Page3() {
                     }}
                     className="y-axis"
                     stroke="white"
-                    tick={{ fill: "white", dx: -10 }} 
+                    tick={{ fill: "white", dx: -10 }}
                   />
                   <Tooltip
                     labelFormatter={formatDateTime}
@@ -422,20 +434,20 @@ function Page3() {
                   <div className="npk-list">
                     <div className="npk-item">
                       <span>Nitrogen (N)</span>
-                      <span className={getNPKColor(soilData.nitrogen)}>
-                        {soilData.nitrogen}%
+                      <span className={getNPKColor(soilData.nitrogrn)}>
+                        {soilData.nitrogen}
                       </span>
                     </div>
                     <div className="npk-item">
                       <span>Phosphorus (P)</span>
                       <span className={getNPKColor(soilData.phosphorus)}>
-                        {soilData.phosphorus}%
+                        {soilData.phosphorus}
                       </span>
                     </div>
                     <div className="npk-item">
                       <span>Potassium (K)</span>
                       <span className={getNPKColor(soilData.potassium)}>
-                        {soilData.potassium}%
+                        {soilData.potassium}
                       </span>
                     </div>
                   </div>
@@ -451,10 +463,10 @@ function Page3() {
                   <div className="value-display">
                     <span
                       className={`large-value ${getMoistureColor(
-                        soilData.moisture
+                        soilData.soil_moisture
                       )}`}
                     >
-                      {soilData.moisture}%
+                      {soilData.soil_moisture}%
                     </span>
                     <span className="value-label">Relative Humidity</span>
                   </div>
@@ -468,8 +480,8 @@ function Page3() {
                 </div>
                 <div className="soil-card-content">
                   <div className="value-display">
-                    <span className={`large-value ${getPHColor(soilData.pH)}`}>
-                      {soilData.pH}
+                    <span className={`large-value ${getPHColor(soilData.ph)}`}>
+                      {soilData.ph}
                     </span>
                     <span className="value-label">pH Scale</span>
                   </div>
