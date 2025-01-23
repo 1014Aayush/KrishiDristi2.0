@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "./Page2.css";
 import Slider from "react-slick"; // React Slick carousel for service slider
 import "slick-carousel/slick/slick.css"; // Carousel style imports
