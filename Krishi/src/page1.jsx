@@ -25,7 +25,7 @@ function Page1() {
   const threshold = 1200;
 
   return (
-    <div className="main">
+    <div id="Page1" className="main">
       <div className="page-container1">
         <div className="first-page">
           <h1 className="header">

@@ -1,0 +1,93 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #1f4520, #1d3e43); /* Gradient colors */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    animation: slideFromRight 0.5s ease-out forwards; /* Added slide animation */
+  }
+  
+  /* Added slide animation keyframes */
+  @keyframes slideFromRight {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: flex-start; /* Changed to flex-start to align items to the left */
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #ffffff;
+    font-family: "Georgia", serif; /* Preserving the custom font here */
+  }
+  
+  /* Added Krishi Dristi text styling */
+  .brand-name {
+    font-size: 1.8rem; /* Larger font size */
+    font-weight: bold;
+    margin-right: auto; /* Pushes the rest of the content to the right */
+    font-family: Arial, sans-serif; /* Applied globally */
+  }
+  
+  /* Adjusted logo position */
+  .navbar-container::before {
+    content: "🌾";
+    margin-right: 10px;
+    font-size: 1.5rem;
+    animation: swing 2s infinite ease-in-out;
+  }
+  
+  /* Adjusted navigation links to maintain spacing */
+  .navbar-links {
+    font-family: Arial, sans-serif; /* Applied globally */
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-left: auto; /* Pushes links to the right */
+  }
+  
+  .navbar-links li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    position: relative;
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+  
+  .navbar-links li a:hover {
+    color: #c9f255; /* Change text color on hover */
+    transform: scale(1.1); /* Slightly enlarge the text */
+  }
+  
+  /* Underline animation effect */
+  .navbar-links li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background-color: #c9f255;
+    transition: width 0.3s ease;
+  }
+  
+  .navbar-links li a:hover::after {
+    width: 100%; /* Expand underline on hover */
+  }
+  
+  /* Style for active link */
+  .navbar-links li a.active-link::after {
+    width: 100%; /* Underline on the active link */
+  }
+  
